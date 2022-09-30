@@ -174,27 +174,27 @@ const Contacts = new Sheet(
         }
       }
     },
-    // batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
-    //   const response = await fetch(
-    //     'https://v1.nocodeapi.com/brentkwebdev/google_sheets/KcPvLNxbwsYSIbZK?tabId=Sheet1',
-    //     {
-    //       method: 'GET',
-    //       headers: {
-    //         Accept: 'application/json',
-    //       },
-    //     }
-    //   )
-    //   const result = await response.json()
-    //   let serverEmails = result.data.map((x: any) => {
-    //     return x.email
-    //   });
-    //   payload.records.map((record: FlatfileRecord) => {
-    //     const fileEmails = record.get('email') as string
-    //     if (serverEmails.includes(fileEmails)) {
-    //       record.addError('email', 'This email already exists')
-    //     }
-    //   })
-    // },
+    batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
+      const response = await fetch(
+        'https://v1.nocodeapi.com/brentkwebdev/google_sheets/KcPvLNxbwsYSIbZK?tabId=Sheet1',
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      )
+      const result = await response.json()
+      let serverEmails = result.data.map((x: any) => {
+        return x.email
+      })
+      payload.records.map((record: FlatfileRecord) => {
+        const fileEmails = record.get('email') as string
+        if (serverEmails.includes(fileEmails)) {
+          record.addError('email', 'This email already exists')
+        }
+      })
+    },
   }
 )
 

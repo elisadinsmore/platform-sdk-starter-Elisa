@@ -12,15 +12,15 @@ import {
 const combinedColorsSheet = new Sheet(
   'Combined Colors Sheet',
   {
-    firstColor: OptionField({
-      options: {
-        blue: 'Blue',
-        green: 'Green',
-        orange: 'Orange',
-      },
+    firstColorPreference: TextField({
+      label: 'First Color Preference',
     }),
-    secondColor: TextField(),
-    thirdColor: TextField(),
+    secondColorPreferencet: TextField({
+      label: 'Second Color Preference',
+    }),
+    thirdColorPreference: TextField({
+      label: 'Third Color Preference',
+    }),
     allColors: TextField({
       label: 'All Colors',
     }),
@@ -29,11 +29,9 @@ const combinedColorsSheet = new Sheet(
     allowCustomFields: true,
     readOnly: true,
     recordCompute: (record) => {
-      const combinedColors = `${record.get('firstColor.options')}  ${record.get(
-        'secondColor'
-      )} ${record.get('thirdColor')}`
+      const combinedColors =
+        "{record.get('firstColorPreference')} {record.get('secondColorPreference')} {record.get('thirdColorPreference')}"
       record.set('allColors', combinedColors)
-      return record
     },
   }
 )
