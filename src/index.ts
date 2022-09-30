@@ -1,59 +1,29 @@
 import {
+  Sheet,
+  Workbook,
+  TextField,
   BooleanField,
-  DateField,
-  Message,
   NumberField,
   OptionField,
   Portal,
-  Sheet,
-  TextField,
-  Workbook,
   LinkedField,
 } from '@flatfile/configure'
 
-import { FlatfileRecord, FlatfileRecords } from '@flatfile/hooks'
-import fetch from 'node-fetch'
-
-const Employees = new Sheet(
-  'Employees',
+// Assigns a default value to the country field if it is empty
+const combinedColorsSheet = new Sheet(
+  'Combined Colors Sheet',
   {
-    firstName: TextField({
-      required: true,
-      description: 'Given name',
-    }),
-    lastName: TextField({
-      compute: (v: any) => {
-        return `Rock`
-      },
-    }),
-    fullName: TextField(),
-
-    stillEmployed: BooleanField(),
-    department: OptionField({
-      label: 'Department',
+    firstColor: OptionField({
       options: {
-        engineering: { label: 'Engineering' },
-        hr: 'People Ops',
-        sales: 'Revenue',
+        blue: 'Blue',
+        green: 'Green',
+        orange: 'Orange',
       },
     }),
-    fromHttp: TextField({ label: 'Set by batchRecordCompute' }),
-    salary: NumberField({
-      label: 'Salary',
-      description: 'Annual Salary in USD',
-      required: true,
-      validate: (salary: number) => {
-        const minSalary = 30_000
-        if (salary < minSalary) {
-          return [
-            new Message(
-              `${salary} is less than minimum wage ${minSalary}`,
-              'warn',
-              'validate'
-            ),
-          ]
-        }
-      },
+    secondColor: TextField(),
+    thirdColor: TextField(),
+    allColors: TextField({
+      label: 'All Colors',
     }),
     startDate: DateField(),
   },
@@ -61,8 +31,10 @@ const Employees = new Sheet(
     allowCustomFields: true,
     readOnly: true,
     recordCompute: (record) => {
-      const fullName = `{record.get('firstName')} {record.get('lastName')}`
-      record.set('fullhName', fullName)
+      const combinedColors = `${record.get('firstColor.options')}  ${record.get(
+        'secondColor'
+      )} ${record.get('thirdColor')}`
+      record.set('allColors', combinedColors)
       return record
     },
     batchRecordsCompute: async (payload: FlatfileRecords<any>) => {
@@ -86,10 +58,10 @@ const EmployeesPortal = new Portal({
 })
 
 export default new Workbook({
-  name: 'Employees',
-  namespace: 'employee',
+  name: 'Elisa Test',
+  namespace: 'Elisa combined Colors',
   sheets: {
-    Employees,
+    combinedColorsSheet,
   },
   portals: [EmployeesPortal],
 })
